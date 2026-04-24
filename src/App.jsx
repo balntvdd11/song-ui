@@ -24,10 +24,19 @@ function App() {
       .catch(() => setIsLoading(false));
   }, []);
 
-  const getEmbedUrl = (url) => {
-    const id = url.split('youtu.be/')[1];
-    return `[youtube.com](https://www.youtube.com/embed/${id}?autoplay=1&rel=0)`;
-  };
+ const getEmbedUrl = (url = '') => {
+  let id = '';
+
+  if (url.includes('youtu.be/')) {
+    id = url.split('youtu.be/')[1]?.split('?')[0];
+  } else if (url.includes('watch?v=')) {
+    id = url.split('watch?v=')[1]?.split('&')[0];
+  }
+
+  if (!id) return ''; // prevent broken iframe
+
+  return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+};
 
   const filteredSongs = songs.filter(
     (song) =>
